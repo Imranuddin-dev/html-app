@@ -16,6 +16,23 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v4
 
+      - name: Check Docker Hub secret lengths
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: |
+          echo "USERNAME_LENGTH=${#DOCKERHUB_USERNAME}"
+          echo "TOKEN_LENGTH=${#DOCKERHUB_TOKEN}"
+          case "$DOCKERHUB_TOKEN" in
+            dckr_pat_*) echo "TOKEN_PREFIX_OK";;
+            *) echo "TOKEN_PREFIX_UNEXPECTED";;
+          esac
+          if [[ "$DOCKERHUB_TOKEN" == *$'\n'* ]]; then
+            echo "TOKEN_HAS_NEWLINE=yes"
+          else
+            echo "TOKEN_HAS_NEWLINE=no"
+          fi
+
       - name: Login to DockerHub
         env:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
