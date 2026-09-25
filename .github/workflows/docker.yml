@@ -53,3 +53,7 @@ jobs:
         run: |
           sed -i "s|IMAGE_NAME|${{ secrets.DOCKERHUB_USERNAME }}/html-app|g" deployment.yaml
           sed -i "s|IMAGE_TAG|${{ github.sha }}|g" deployment.yaml
+
+      - name: Deploy to EKS
+        run: |
+          kubectl apply -f deployment.yaml
