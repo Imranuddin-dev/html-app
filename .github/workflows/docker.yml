@@ -48,3 +48,8 @@ jobs:
           aws eks update-kubeconfig \
             --region us-east-1 \
             --name my-cluster
+
+      - name: Update deployment image
+        run: |
+          sed -i "s|IMAGE_NAME|${{ secrets.DOCKERHUB_USERNAME }}/html-app|g" deployment.yaml
+          sed -i "s|IMAGE_TAG|${{ github.sha }}|g" deployment.yaml
